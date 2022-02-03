@@ -144,7 +144,7 @@ class CompanyController extends Controller
             }
             if (empty($errors) == true) {
                 $request->logo->move($image_upload_dir, $image_custom_name);
-                if(file_exists(public_path($companies->logo_path))){
+                if(file_exists(public_path($companies->logo_path) && !empty($companies->logo_path))){
                     unlink(public_path($companies->logo_path));
                 }
                 $request->merge(['logo' =>  $image_file_name,'logo_path' =>  $image_fullpath]);

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CompanyController;
+use Illuminate\Auth\Middleware\Authenticate;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,10 +15,14 @@ use App\Http\Controllers\CompanyController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    if(Auth::user()){
+        return redirect()->route('home');
+    }else{
+        return view('auth.login');
+    }
 });
 Auth::routes(['register' => false]);
-
-Route::get('/home', [App\Http\Controllers\CompanyController::class, 'index'])->name('home');
-
-Route::resource('companies', CompanyController::class);
+Route::group(['middleware'=>['auth']],function(){
+    Route::get('/home', [App\Http\Controllers\CompanyController::class, 'index'])->name('home');
+    Route::resource('companies', CompanyController::class);
+});
